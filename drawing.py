@@ -77,6 +77,15 @@ def encode_ascii(ascii_string):
     return np.array(list(map(lambda x: alpha_to_num[x], ascii_string)) + [0])
 
 
+def decode_ascii(ascii_ints, ascii_ints_len):
+    """
+    decodes array of ints to ascii string
+    """
+    asciiArray = list(map(lambda x: alphabet[x], ascii_ints))[:ascii_ints_len]
+    assert(asciiArray[-1] == '\0')
+    return ''.join(asciiArray[:-1])
+
+
 def denoise(coords):
     """
     smoothing filter to mitigate some artifacts of the data collection
