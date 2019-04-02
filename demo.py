@@ -152,6 +152,7 @@ class Hand(object):
 if __name__ == '__main__':
     hand = Hand()
 
+    print("Demo 0 ...")
     # usage demo
     lines = [
         "Now this is a story all about how",
@@ -174,6 +175,7 @@ if __name__ == '__main__':
     )
 
     # demo number 1 - fixed bias, fixed style
+    print("Demo 1 ...")
     lines = lyrics.all_star.split("\n")
     biases = [.75 for i in lines]
     styles = [12 for i in lines]
@@ -186,6 +188,7 @@ if __name__ == '__main__':
     )
 
     # demo number 2 - fixed bias, varying style
+    print("Demo 2 ...")
     lines = lyrics.downtown.split("\n")
     biases = [.75 for i in lines]
     styles = np.cumsum(np.array([len(i) for i in lines]) == 0).astype(int)
@@ -198,6 +201,7 @@ if __name__ == '__main__':
     )
 
     # demo number 3 - varying bias, fixed style
+    print("Demo 3 ...")
     lines = lyrics.give_up.split("\n")
     biases = .2*np.flip(np.cumsum([len(i) == 0 for i in lines]), 0)
     styles = [7 for i in lines]
