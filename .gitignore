@@ -1,7 +1,12 @@
-data/raw/ascii
-data/raw/lineStrokes
-data/raw/original
-data/processed
+/data/raw/ascii
+/data/raw/lineStrokes
+/data/raw/original
+/data/raw_deepwriting/*.npz
+/data/processed
 
-logs
-predictions
+/logs
+/predictions
+
+/venv
+
+__pycache__
