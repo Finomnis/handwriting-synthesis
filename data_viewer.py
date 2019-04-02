@@ -92,9 +92,6 @@ class DataDrawer():
     def run(self):
         self.drawCurrentFrame()
 
-        for member in dir(self.fig.canvas):
-            print(member)
-
         plt.show()
 
 
