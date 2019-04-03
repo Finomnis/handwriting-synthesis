@@ -24,10 +24,10 @@ class DataDrawer():
 
 
     def onKeyPress(self, event):
-        if event.key == 'right':
+        if event.key == 'right' or event.key == 'd':
             self.currentFrameId = (self.currentFrameId + 1) % len(self.dataFrame)
             self.drawCurrentFrame()
-        elif event.key == 'left':
+        elif event.key == 'left' or event.key == 'a':
             self.currentFrameId = (self.currentFrameId - 1) % len(self.dataFrame)
             self.drawCurrentFrame()
 
