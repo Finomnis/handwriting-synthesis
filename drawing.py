@@ -138,13 +138,17 @@ def interpolate(coords, factor=2):
     return coords
 
 
-def normalize(offsets):
+def normalize(offsets, returnNormalizationFactor=False):
     """
     normalizes strokes to median unit norm
     """
     offsets = np.copy(offsets)
+    normalizationFactor = np.median(np.linalg.norm(offsets[:, :2], axis=1))
     offsets[:, :2] /= np.median(np.linalg.norm(offsets[:, :2], axis=1))
-    return offsets
+    if returnNormalizationFactor:
+        return offsets, normalizationFactor
+    else:
+        return offsets
 
 
 def coords_to_offsets(coords):
