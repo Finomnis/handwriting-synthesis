@@ -1,12 +1,18 @@
+#!/usr/bin/env python3
+
 from __future__ import print_function
-import os
 from xml.etree import ElementTree
 
 import numpy as np
 
 import drawing
-
 import operator
+
+import argparse
+import os
+import sys
+
+from tqdm import tqdm
 
 def get_stroke_sequence(sampleStrokes):
 
@@ -69,30 +75,29 @@ def int_labels_to_text(line_int, eoc_labels, bow_labels, dataset):
 
 
 
-def collect_data():
-    fnames = []
-    for dirpath, dirnames, filenames in os.walk('data/raw_npz/'):
-        if dirnames:
-            continue
-        for filename in filenames:
-            if filename.startswith('.'):
-                continue
-            if not filename.endswith('.npz'):
-                continue
-            print(os.path.join(dirpath,filename))
-            fnames.append(os.path.join(dirpath, filename))
+def collect_data(fnames):
+#    fnames = []
+#    for dirpath, dirnames, filenames in os.walk('data/raw_npz/'):
+#        if dirnames:
+#            continue
+#        for filename in filenames:
+#            if filename.startswith('.'):
+#                continue
+#            if not filename.endswith('.npz'):
+#                continue
+#            print(os.path.join(dirpath,filename))
+#            fnames.append(os.path.join(dirpath, filename))
+    
     
     x_out = []
     c_out = []
 
     for i, fname in enumerate(fnames):
-        print(i, fname)  
+        print('loading \'' + fname + '\'...')  
         dataset = np.load(fname, allow_pickle=True)
 
         assert(len(dataset['samples']) == len(dataset['texts']))
-        for i2, (strokes, text) in enumerate(zip(dataset['samples'], dataset['texts'])):
-            if i2 % 200 == 0:
-                print(i2, '\t', '/', len(dataset['samples']))
+        for strokes, text in zip(tqdm(dataset['samples'], file=sys.stdout), dataset['texts']):
             x_out.append(strokes)
             c_out.append(drawing.encode_ascii(text.strip())[:drawing.MAX_CHAR_LEN])
 
@@ -100,9 +105,16 @@ def collect_data():
 
 
 if __name__ == '__main__':
-    print('traversing data directory...')
-    input_x, input_c = collect_data()
-    print(len(input_x), len(input_c))
+ 
+    parser = argparse.ArgumentParser(description='Converts npz files to actual training libraries')
+    parser.add_argument('npz_files', nargs='+', help='The input npz files.')
+    parser.add_argument('output', help='The output folder where to store the resulting dataset.')
+    args = parser.parse_args()
+    print(args)
+
+    print('loading data...')
+    input_x, input_c = collect_data(args.npz_files)
+    #print(len(input_x), len(input_c))
 
     print('dumping to numpy arrays...')
     x = np.zeros([len(input_x), drawing.MAX_STROKE_LEN, 3], dtype=np.float32)
@@ -111,10 +123,10 @@ if __name__ == '__main__':
     c_len = np.zeros([len(input_x)], dtype=np.int8)
     valid_mask = np.zeros([len(input_x)], dtype=np.bool)
 
-    for i, (x_i_raw, c_i) in enumerate(zip(input_x, input_c)):
+    for i, (x_i_raw, c_i) in enumerate(zip(tqdm(input_x, file=sys.stdout), input_c)):
 
-        if i % 200 == 0:
-            print(i, '\t', '/', len(input_x))
+        #if i % 200 == 0:
+        #    print(i, '\t', '/', len(input_x))
 
         x_i = get_stroke_sequence(x_i_raw)
         valid_mask[i] = ~np.any(np.linalg.norm(x_i[:, :2], axis=1) > 60)
@@ -125,10 +137,10 @@ if __name__ == '__main__':
         c[i, :len(c_i)] = c_i
         c_len[i] = len(c_i)
 
-    if not os.path.isdir('data/processed'):
-        os.makedirs('data/processed')
+    if not os.path.isdir(args.output):
+        os.makedirs(args.output)
 
-    np.save('data/processed/x.npy', x[valid_mask])
-    np.save('data/processed/x_len.npy', x_len[valid_mask])
-    np.save('data/processed/c.npy', c[valid_mask])
-    np.save('data/processed/c_len.npy', c_len[valid_mask])
+    np.save(os.path.join(args.output,'x.npy'), x[valid_mask])
+    np.save(os.path.join(args.output,'x_len.npy'), x_len[valid_mask])
+    np.save(os.path.join(args.output,'c.npy'), c[valid_mask])
+    np.save(os.path.join(args.output,'c_len.npy'), c_len[valid_mask])

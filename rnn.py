@@ -11,6 +11,7 @@ from rnn_ops import rnn_free_run
 from tf_base_model import TFBaseModel
 from tf_utils import time_distributed_dense_layer
 
+import argparse
 
 class DataReader(object):
 
@@ -207,13 +208,21 @@ class rnn(TFBaseModel):
 
 
 if __name__ == '__main__':
-    dr = DataReader(data_dir='data/processed/')
+
+    
+    parser = argparse.ArgumentParser(description='Trains the handwriting-synthesis network')
+    parser.add_argument('dataset', help='The dataset directory')
+    parser.add_argument('name', help='The name of the training run')
+    args = parser.parse_args()
+    print(args)
+
+    dr = DataReader(data_dir=args.dataset)
 
     nn = rnn(
         reader=dr,
         log_dir='logs',
-        checkpoint_dir='checkpoints',
-        prediction_dir='predictions',
+        checkpoint_dir=os.path.join('checkpoints', args.name),
+        prediction_dir=os.path.join('predictions', args.name),
         learning_rates=[.0001, .00005, .00002],
         batch_sizes=[32, 64, 64],
         patiences=[1500, 1000, 500],

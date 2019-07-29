@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import os
+import argparse
 
 
 
@@ -97,9 +98,14 @@ class DataDrawer():
 
 
 def main():
-    data_dir = "data/processed"
+ 
+    parser = argparse.ArgumentParser(description='Converts npz files to actual training libraries')
+    parser.add_argument('dataset', help='The dataset folder.')
+    args = parser.parse_args()
+    print(args)
+
     data_cols = ['x', 'x_len', 'c', 'c_len']
-    data = [np.load(os.path.join(data_dir, '{}.npy'.format(i))) for i in data_cols]
+    data = [np.load(os.path.join(args.dataset, '{}.npy'.format(i))) for i in data_cols]
     
     dataFrame = DataFrame(columns=data_cols, data=data)
     dataDrawer = DataDrawer(dataFrame)
