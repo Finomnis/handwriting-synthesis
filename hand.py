@@ -10,11 +10,11 @@ from rnn import rnn
 
 class Hand(object):
 
-    def __init__(self):
+    def __init__(self, checkpointDir):
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
         self.nn = rnn(
             log_dir='logs',
-            checkpoint_dir='checkpoints',
+            checkpoint_dir=checkpointDir,
             prediction_dir='predictions',
             learning_rates=[.0001, .00005, .00002],
             batch_sizes=[32, 64, 64],

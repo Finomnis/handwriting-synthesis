@@ -3,8 +3,15 @@ import numpy as np
 import lyrics
 from hand import Hand
 
+import argparse
+
 if __name__ == '__main__':
-    hand = Hand()
+    parser = argparse.ArgumentParser(description='Renders a set of demo images')
+    parser.add_argument('checkpoints', help='The checkpoints folder.')
+    args = parser.parse_args()
+    print(args)
+
+    hand = Hand(args.checkpoints)
 
     print("Demo 0 ...")
     # usage demo
@@ -66,3 +73,18 @@ if __name__ == '__main__':
         biases=biases,
         styles=styles,
     )
+
+    # demo number 4 - fixed bias, varying style
+    print("Demo 4 ...")
+    lines = lyrics.synthetic_sample.split("\n")
+    biases = [.75 for i in lines]
+    styles = np.cumsum(np.array([len(i) for i in lines]) == 0).astype(int)
+
+    hand.write(
+        filename='img/synthetic_sample.svg',
+        lines=lines,
+        biases=biases,
+        styles=styles,
+    )
+
+

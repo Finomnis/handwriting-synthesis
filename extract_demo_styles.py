@@ -5,13 +5,21 @@ import numpy as np
 import svgwrite
 import drawing
 
+import os
+import argparse
+
 style_ids = [0, 5, 8, 12, 19, 26, 28, 32, 37, 42, 44, 46, 51]
 
+parser = argparse.ArgumentParser(description='Extracts demo styles from the dataset')
+parser.add_argument('dataset', help='The dataset folder.')
+args = parser.parse_args()
+print(args)
 
-database_x = np.load("data/processed/x.npy")
-database_x_len = np.load("data/processed/x_len.npy")
-database_c = np.load("data/processed/c.npy")
-database_c_len = np.load("data/processed/c_len.npy")
+
+database_x = np.load(os.path.join(args.dataset, "x.npy"))
+database_x_len = np.load(os.path.join(args.dataset, "x_len.npy"))
+database_c = np.load(os.path.join(args.dataset, "c.npy"))
+database_c_len = np.load(os.path.join(args.dataset, "c_len.npy"))
 
 
 for styleId, databaseId in enumerate(style_ids):

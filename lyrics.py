@@ -114,6 +114,32 @@ Do you think time would pass me by?
 If I could just see you
 If I could just hold you tonight"""
 
+synthetic_sample = """I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample
+
+I am a synthetic sample"""
+
 give_up = """We're no strangers to love
 You know the rules and so do I
 A full commitment's what I'm thinking of
